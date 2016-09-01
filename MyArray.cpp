@@ -21,66 +21,62 @@ class Array
 
 vector<string> parseString(string);
 
+const int PLACED = 200;
+
 int main(){
   Array valStore;
   Array storeStatus;
-  int storeIndex = 0;
-  string input;
+  int storeTotal = 0;
+  string index;
+  string value;
+  vector<string> tokens;
 
   do{
     cout << "Input an index and a value [Q to quit]: ";
-    getline(cin,input);
-    vector<string> tokens = parseString(input);
-    if(tokens.at(0) == "Q" || tokens.at(0) == "q"){
+    cin >> index;
+    if(index == "Q" || index == "q"){
       break;
     }
-    int index = atoi(tokens.at(0).c_str());
-    int value = atoi(tokens.at(1).c_str());
+    cin >> value;
+    cin.ignore(1000,10);
+    valStore[atoi(index.c_str())] = atoi(value.c_str());
+    storeStatus[atoi(index.c_str())] = PLACED;
+  }while(index != "Q" || index != "q");
+  cout << endl;
 
-    valStore[index] = value;
-    storeStatus[storeIndex] = index;
-    storeIndex++;
-  }while(input!="Q" || input!="q");
-
-  cout << "You stored this many values: " << storeIndex << endl;
-  cout << "The index-value pairs are:" << endl;
-  for(int i = 0; i < storeIndex; i++){
-    cout << storeStatus[i] << " => " << valStore[storeStatus[i]] << endl;;
+  for(int i = 0; i < 100; i++){
+    if(storeStatus[i] == PLACED){
+      storeTotal++;
+    }
   }
+  cout << "You stored this many values: " << storeTotal << endl;
+
+  cout << "The index-value pairs are:" << endl;
+  for(int i = 0; i < 100; i++){
+    if(storeStatus[i] != 0){
+      cout << i << " => " << valStore[i] << endl;
+    }
+  }
+  cout << endl;
 
   do{
     cout << "Input an index and a value [Q to quit]: ";
-    getline(cin,input);
-    cout << endl;
-    vector<string> tokens = parseString(input);
-    if(tokens.at(0) == "Q" || tokens.at(0) == "q"){
+    cin >> index;
+    if(index == "Q" || index == "q"){
       break;
     }
-    int index = atoi(tokens.at(0).c_str());
-    if(index < 100 && index >=0){
-      bool isUsed = false;
-      for(int i = 0; i < storeIndex; i++){
-        if(storeStatus[i]==index){
-          isUsed = true;
-        }
-      }
-      if(isUsed){
-        int valFind = valStore[index];
-        cout << "The value at this index is: " << valFind << "\n";
-      }
-      else{
-        cout << "This index has not been used. Try another index. \n";
-      }
+    if(storeStatus[atoi(index.c_str())] == PLACED && atoi(index.c_str()) >=0 && atoi(index.c_str()) < 100){
+      int valFind = valStore[atoi(index.c_str())];
+      cout << "Found it -- the value stored at " << index << " is " << valFind << "\n";
     }
     else{
-      cout << "Invalid index. Please try another index." << endl;
+      cout << "I didn't find it\n";
     }
-  }while(input!="Q" || input!="q");
+  }while(index != "Q" || index != "q");
 }
 
 Array::Array()
 {
-  int dummy;
   for (int index = 0; index < 100; index++)
     values[index] = 0;
 }
